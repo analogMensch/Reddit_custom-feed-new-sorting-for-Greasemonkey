@@ -1,0 +1,30 @@
+// ==UserScript==
+// @name        Reddit : custom feed new sorting
+// @match       *://*.reddit.com/*
+// @run-at      document-start
+// @grant       none
+// ==/UserScript==
+var pageURLCheckTimer = setInterval (
+	function () {
+		var oldURL = window.location.pathname;
+    const sub = new RegExp("/user/analogmensch/m/*/","g");
+    const pathcounter = new RegExp("/","g");
+    const exception = [" "];  //exception list
+    if (oldURL.match(sub) && (oldURL.match(pathcounter) || []).length == 5) {
+      for (let i = 0; i < exception.length; i++) {
+        if (oldURL.match(exception[i])) {
+          clearInterval(pageURLCheckTimer);
+          break;
+      	}
+      	else {
+      		var newURL  = window.location.protocol + "//" + window.location.host + oldURL + "new/";
+      		console.info("CUSTOM FEED sorting active: " + newURL);
+          document.body.style.display = "none";
+      		clearInterval(pageURLCheckTimer);
+      		window.location.replace(newURL);
+      	}
+    	}
+    }
+  },
+  100
+);
